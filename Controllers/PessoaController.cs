@@ -32,5 +32,36 @@ namespace apidotnet5.Controllers
             var dados = await dc.pessoa.ToListAsync();
             return Ok(dados);
         }
+
+        [HttpGet("api/{id}")]
+        public Pessoa buscarPorId(int id)
+        {
+            Pessoa pessoa = dc.pessoa.Find(id);
+            return pessoa;
+        }
+
+        [HttpPut("api")]
+        public async Task<ActionResult> atualizar([FromBody] Pessoa pessoa)
+        {
+            dc.pessoa.Update(pessoa);
+            await dc.SaveChangesAsync();
+            return Ok(pessoa);
+
+        }
+
+        [HttpDelete("api/{id}")]
+        public async Task<ActionResult> remover(int id)
+        {
+            Pessoa p = buscarPorId(id);
+
+            if(p == null){
+                return NotFound();
+            }
+
+            dc.pessoa.Remove(p);
+            await dc.SaveChangesAsync();
+            return Ok();
+        }
+
     }
 }
